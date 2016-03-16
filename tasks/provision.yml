@@ -1,28 +1,74 @@
 ---
- - name: Provision EC2 Instance
-   ec2:
-     key_name: "{{ ec2_keypair }}"
-     group_id: "{{ ec2_security_group }}"
-     instance_type: "{{ ec2_instance_type }}"
-     image: "{{ ec2_image }}"
-     vpc_subnet_id: "{{ ec2_subnet_ids|random }}"
-     region: "{{ ec2_region }}"
-     instance_tags: "{{ ec2_tags }}"
-     assign_public_ip: yes
-     wait: true
-     count: 1
-     volumes: {{ volume }}
-   register: ec2
+- debug: var=ec2launch
+  tags: vars
 
- - debug: var=item
-   with_items: ec2.instances
+- name: Terminate current instances.
+  ec2:
+    region: "{{ ec2launch.region }}"
+    exact_count: 0
+    image: "{{ ec2launch.image }}"
+    count_tag: "{{ ec2launch.tags }}"
+  when: ec2launch.relaunch
+  tags: terminate
 
- - name: Add provisioned ec2 instances to in memory inventory
-   add_host: name={{ item.public_ip }} >
-             groups={{ environ }}_instances
-             {{ ec2_tags }}
-   with_items: ec2.instances
+- name: Provision EC2 Instance
+  ec2:
+    key_name: "{{ ec2launch.keypair }}"
+    group_id: "{{ ec2launch.security_group }}"
+    instance_type: "{{ ec2launch.instance_type }}"
+    image: "{{ ec2launch.image }}"
+    vpc_subnet_id: "{{ ec2launch.subnet_ids|random }}"
+    instance_profile_name: "{{ ec2launch.iam_role}}"
+    region: "{{ ec2launch.region }}"
+    instance_tags: "{{ ec2launch.tags }}"
+    assign_public_ip: yes
+    wait: true
+    count: {{ ec2launch.count }}
+    volumes: {{ volume }}
+    user_data: "{{ lookup('template', 'user_data.j2')|default('')}}"
+  register: launched
+  tags: launch
 
- - name: Wait for the instances to boot by checking the ssh port
-   wait_for: host={{item.public_ip}} port=22 delay=60 timeout=320 state=started
-   with_items: ec2.instances
+- debug: var=item
+  with_items: launched.instances
+
+- name: Wait for SSH to come up
+  wait_for:
+    host: "{{ item[ec2launch.check.ip] }}"
+    port: "{{ ec2launch.check.port }}"
+    delay: 60
+    timeout: 900
+    state: started
+  with_items: "{{ launched.instances }}"
+
+- name: Add provisioned ec2 instances to in memory inventory
+  add_host:
+    hostname: "{{ item.id }}.{{ ec2launch.inventory_group }}"
+    groupname: "{{ ec2launch.inventory_group }}"
+    ansible_ssh_host: "{{ item[ec2launch.check.ip] }}"
+    ansible_user: "{{ ec2launch.ansible_user }}"
+    ansible_ssh_private_key_file: "{{ ec2launch.keypair }}"
+  with_items: launched.instances
+
+- name: Send notification to Slack
+  slack:
+    token: "{{ ec2launch.slack.token }}"
+    msg: "{{ ec2launch.slack.message }}"
+    attachments:
+      - title: "Instance info"
+        text: "{{ ec2launch.slack.description }}"
+        color: good
+        fields:
+          - title: "Instance tags"
+            value: "{{ ec2launch.tags | join(' - ') }}"
+            short: "true"
+          - title: "AMI Id"
+            value: "{{ ec2launch.image }}"
+            short: "true"
+          - title: "Instances"
+            value: "{{ launched.instances|map(attribute='id')|join(', ') }}"
+            short: "true"
+    username: "{{ ec2launch.slack.username }}"
+    channel: "{{ ec2launch.slack.channel }}"
+    icon_emoji: "{{ ec2launch.slack.icon_emoji }}"
+  when: ec2launch.slack.token is defined

@@ -7,7 +7,7 @@
     max_size: {{ asg_max_size }}
     desired_capacity: {{ asg_desired_capacity }}
     replace_all_instances: {{ asg_replace_all_instances }}
-    vpc_zone_identifier: {{ ec2_subnet_ids }}
+    vpc_zone_identifier: {{ ec2launch.subnet_ids }}
     tags:
-      - {{ ec2_tags }}
+      - {{ ec2launch.tags }}
         propagate_at_launch: true
