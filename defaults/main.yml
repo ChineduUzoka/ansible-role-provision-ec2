@@ -1,5 +1,11 @@
 ---
 # defaults file for ansible-role-provision-ec2
+asg_name: {}
+asg_desired_capacity: {}
+asg_min_size: {}
+asg_max_size: {}
+asg_replace_all_instances: {}
+lc_name: {}
 ec2_keypair: {}
 ec2_security_group: {}
 ec2_instance_type: {}
@@ -8,3 +14,4 @@ ec2_subnet_ids: []
 ec2_region: "us-west-2"
 ec2_volume_size: {}
 ec2_tags: []
+volume: []
