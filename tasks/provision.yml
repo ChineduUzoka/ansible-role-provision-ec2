@@ -43,11 +43,11 @@
 
 - name: Add provisioned ec2 instances to in memory inventory
   add_host:
-    hostname: "{{ item.id }}.{{ ec2launch.inventory_group }}"
+    hostname: "{{ item.id }}.{{ environ }}"
     groupname: "{{ ec2launch.inventory_group }}"
     ansible_ssh_host: "{{ item[ec2launch.check.ip] }}"
     ansible_user: "{{ ec2launch.ansible_user }}"
-    ansible_ssh_private_key_file: "{{ ec2launch.keypair }}"
+    ansible_ssh_private_key_file: "{{ ec2launch.ansible_key }}"
   with_items: launched.instances
 
 - name: Send notification to Slack
