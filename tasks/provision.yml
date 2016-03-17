@@ -22,7 +22,6 @@
     region: "{{ ec2launch.region }}"
     instance_tags: "{{ ec2launch.tags }}"
     assign_public_ip: yes
-    wait: true
     count: {{ ec2launch.count }}
     volumes: {{ volume }}
     user_data: "{{ lookup('template', 'user_data.j2')|default('')}}"
