@@ -17,6 +17,7 @@
     group_id: "{{ ec2launch.security_group }}"
     instance_type: "{{ ec2launch.instance_type }}"
     image: "{{ ec2launch.image }}"
+    wait: true
     vpc_subnet_id: "{{ ec2launch.subnet_ids|random }}"
     instance_profile_name: "{{ ec2launch.iam_role}}"
     region: "{{ ec2launch.region }}"
