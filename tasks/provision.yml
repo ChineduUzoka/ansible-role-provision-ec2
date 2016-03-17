@@ -24,7 +24,7 @@
     assign_public_ip: yes
     count: "{{ ec2launch.count }}"
     volumes: "{{ volume }}"
-    user_data: "{{ lookup('template', 'user_data.j2')|default('')}}"
+    user_data: "{{ lookup('template', 'user_data.j2')|default('omit')}}"
   register: launched
   tags: launch
 
