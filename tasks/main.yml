@@ -1,7 +1,7 @@
 ---
 # tasks file for ansible-role-provision-ec2
 - include: provision.yml
-#- include: ec2_lc.yml
-#  when: lc_name is defined and asg_name is defined
-#- include: ec2_asg.yml
-#  when: lc_name is defined and asg_name is defined
+- include: ec2_lc.yml
+  when: lc_enabled is defined and lc_enabled
+- include: ec2_asg.yml
+  when: asg_enabled is defined and asg_enabled

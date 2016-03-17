@@ -59,8 +59,8 @@
         text: "{{ ec2launch.slack.description }}"
         color: good
         fields:
-          - title: "Instance tags"
-            value: "{{ ec2launch.tags | join(' - ') }}"
+          - title: "Instance Name"
+            value: "{{ ec2launch.tags.Name }}"
             short: "true"
           - title: "AMI Id"
             value: "{{ ec2launch.image }}"

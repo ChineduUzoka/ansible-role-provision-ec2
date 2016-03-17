@@ -26,9 +26,11 @@ ec2launch:
     icon_emoji: ":bot:"
   user_data: {}
 asg_name: {}
+asg_enabled: no
 asg_desired_capacity: {}
 asg_min_size: {}
 asg_max_size: {}
 asg_replace_all_instances: {}
 lc_name: {}
+lc_enabled: no
 volume: []
