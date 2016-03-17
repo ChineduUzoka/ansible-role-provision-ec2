@@ -65,7 +65,7 @@
           - title: "AMI Id"
             value: "{{ ec2launch.image }}"
             short: "true"
-          - title: "Instances"
+          - title: "Instance Id's"
             value: "{{ launched.instances|map(attribute='id')|join(', ') }}"
             short: "true"
     username: "{{ ec2launch.slack.username }}"
