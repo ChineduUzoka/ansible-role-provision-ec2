@@ -4,10 +4,10 @@ ec2launch:
   relaunch: False
   region: "us-west-2"
   security_group: []
-  iam_role: {}
+  iam_role: []
   keypair: {}
   image: {}
-  subnet_ids: {}
+  subnet_ids: []
   instance_type: {}
   elastic_ips: []
   count: 1
