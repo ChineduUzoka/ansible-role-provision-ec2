@@ -1,9 +1,9 @@
 ---
 - name: create ec2 launch config
   ec2_lc:
-    name: {{ lc_name }}
-    image_id: {{ ec2launch.image }}
-    key_name: {{ ec2launch.keypair }}
-    security_groups: {{ ec2launch.security_group }}
-    instance_type: {{ ec2launch.instance_type }}
-    volumes: {{ volume }}
+    name: "{{ lc_name }}"
+    image_id: "{{ ec2launch.image }}"
+    key_name: "{{ ec2launch.keypair }}"
+    security_groups: "{{ ec2launch.security_group }}"
+    instance_type: "{{ ec2launch.instance_type }}"
+    volumes: "{{ volume }}"

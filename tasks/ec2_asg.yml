@@ -1,13 +1,13 @@
 ---
 - name: create ec2 asg
   ec2_asg:
-    name: {{ asg_name }}
-    launch_config_name: {{ lc_name }}
-    min_size: {{ asg_min_size }}
-    max_size: {{ asg_max_size }}
-    desired_capacity: {{ asg_desired_capacity }}
-    replace_all_instances: {{ asg_replace_all_instances }}
-    vpc_zone_identifier: {{ ec2launch.subnet_ids }}
+    name: "{{ asg_name }}"
+    launch_config_name: "{{ lc_name }}"
+    min_size: "{{ asg_min_size }}"
+    max_size: "{{ asg_max_size }}"
+    desired_capacity: "{{ asg_desired_capacity }}"
+    replace_all_instances: "{{ asg_replace_all_instances }}"
+    vpc_zone_identifier: "{{ ec2launch.subnet_ids }}"
     tags:
-      - {{ ec2launch.tags }}
+      - "{{ ec2launch.tags }}"
         propagate_at_launch: true
