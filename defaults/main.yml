@@ -13,7 +13,7 @@ ec2launch:
   count: 1
   tags: []
   check:
-    ip: public_ip
+    ip: private_ip
     port: 22
   inventory_group: {}
   ansible_user: ubuntu
